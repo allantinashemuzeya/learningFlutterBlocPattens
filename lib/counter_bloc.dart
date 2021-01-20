@@ -45,7 +45,8 @@ import 'dart:async';
 enum CounterAction{
   Increment,
   Decrement,
-  Reset
+  Reset,
+  NoEvent,
 }
 
 class CounterBloc {
@@ -55,12 +56,12 @@ int _counter = 0;
 //  What goes in is called a SINK (input)
 // What comes out is called Stream (State Stream Controller)
 
-  final _stateStreamController = StreamController<int>();
+  final _stateStreamController = StreamController<int>.broadcast();
 
   StreamSink<int> get counterSink => _stateStreamController.sink; // input
   Stream<int> get counterStream => _stateStreamController.stream; // output
 
-  final _eventStreamController = StreamController<CounterAction>();
+  final _eventStreamController = StreamController<CounterAction>.broadcast();
 
   StreamSink<CounterAction> get eventSink => _eventStreamController.sink;
   Stream<CounterAction> get eventStream => _eventStreamController.stream;
@@ -75,6 +76,7 @@ int _counter = 0;
     });
   }
 
+  // Should always close streams to avoid memory leaks.
   void dispose(){
     _stateStreamController.close();
     _eventStreamController.close();
