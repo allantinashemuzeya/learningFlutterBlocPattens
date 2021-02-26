@@ -7,6 +7,7 @@ enum NewsAction{
   Fetch,
   Delete
 }
+
 class NewsBloc {
 
   final _stateStreamController = StreamController<List<Article>>.broadcast();
